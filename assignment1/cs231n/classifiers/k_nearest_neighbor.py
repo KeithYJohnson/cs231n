@@ -49,7 +49,7 @@ class KNearestNeighbor(object):
 
   #AKA Euclidian distance
   def l2_distance(self, a, b):
-      return np.sum(np.sqrt(np.square(a-b)))
+      return np.sqrt(np.sum(np.square(a-b)))
 
   def compute_distances_two_loops(self, X):
     """
