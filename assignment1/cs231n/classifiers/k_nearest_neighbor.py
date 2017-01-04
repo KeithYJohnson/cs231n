@@ -1,4 +1,5 @@
 import numpy as np
+from ipdb import set_trace as st
 
 class KNearestNeighbor(object):
   """ a kNN classifier with L2 distance """
@@ -8,7 +9,7 @@ class KNearestNeighbor(object):
 
   def train(self, X, y):
     """
-    Train the classifier. For k-nearest neighbors this is just 
+    Train the classifier. For k-nearest neighbors this is just
     memorizing the training data.
 
     Inputs:
@@ -19,7 +20,7 @@ class KNearestNeighbor(object):
     """
     self.X_train = X
     self.y_train = y
-    
+
   def predict(self, X, k=1, num_loops=0):
     """
     Predict labels for test data using this classifier.
@@ -33,7 +34,7 @@ class KNearestNeighbor(object):
 
     Returns:
     - y: A numpy array of shape (num_test,) containing predicted labels for the
-      test data, where y[i] is the predicted label for the test point X[i].  
+      test data, where y[i] is the predicted label for the test point X[i].
     """
     if num_loops == 0:
       dists = self.compute_distances_no_loops(X)
@@ -101,7 +102,7 @@ class KNearestNeighbor(object):
     """
     num_test = X.shape[0]
     num_train = self.X_train.shape[0]
-    dists = np.zeros((num_test, num_train)) 
+    dists = np.zeros((num_test, num_train))
     #########################################################################
     # TODO:                                                                 #
     # Compute the l2 distance between all test points and all training      #
@@ -131,7 +132,7 @@ class KNearestNeighbor(object):
 
     Returns:
     - y: A numpy array of shape (num_test,) containing predicted labels for the
-      test data, where y[i] is the predicted label for the test point X[i].  
+      test data, where y[i] is the predicted label for the test point X[i].
     """
     num_test = dists.shape[0]
     y_pred = np.zeros(num_test)
@@ -146,4 +147,3 @@ class KNearestNeighbor(object):
       most_frequent_label = np.argmax(label_counts)
       y_pred[i] = most_frequent_label
     return y_pred
-
