@@ -103,22 +103,15 @@ class KNearestNeighbor(object):
     num_test = X.shape[0]
     num_train = self.X_train.shape[0]
     dists = np.zeros((num_test, num_train))
-    #########################################################################
-    # TODO:                                                                 #
-    # Compute the l2 distance between all test points and all training      #
-    # points without using any explicit loops, and store the result in      #
-    # dists.                                                                #
-    #                                                                       #
-    # You should implement this function using only basic array operations; #
-    # in particular you should not use functions from scipy.                #
-    #                                                                       #
     # HINT: Try to formulate the l2 distance using matrix multiplication    #
     #       and two broadcast sums.                                         #
-    #########################################################################
-    pass
-    #########################################################################
-    #                         END OF YOUR CODE                              #
-    #########################################################################
+
+    # (x-y) ** 2 = x ** 2 - 2xy + y **2
+    xsquared = np.sum(np.square(self.X_train), axis=1)
+    ysquared = np.sum(np.square(X), axis=1)[None].T
+    xy = np.dot(X, self.X_train.T)
+    dists = np.sqrt(xsquared - 2 * xy + ysquared)
+
     return dists
 
   def predict_labels(self, dists, k=1):
