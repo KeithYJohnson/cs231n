@@ -46,6 +46,10 @@ class KNearestNeighbor(object):
 
     return self.predict_labels(dists, k=k)
 
+  #AKA Euclidian distance
+  def l2_distance(self, a, b):
+      return np.sum(np.sqrt(np.square(a-b)))
+
   def compute_distances_two_loops(self, X):
     """
     Compute the distance between each test point in X and each training point
