@@ -71,10 +71,13 @@ class KNearestNeighbor(object):
     for i in xrange(num_test):
       test_example = X[i]
       for j in xrange(num_train):
+
           train_example = self.X_train[j]
-          distance = self.l2_distance(test_example, train_example)
+          distance = self.l2_distance(train_example, test_example)
 
           dists[i,j] = distance
+
+    print("first row from two_loop: ", dists[0,:])
     return dists
 
   def compute_distances_one_loop(self, X):
@@ -91,6 +94,8 @@ class KNearestNeighbor(object):
         test_example = X[i, :]
         distances = np.sqrt(np.sum(np.square((self.X_train - test_example)), axis=1))
         dists[i,:] = distances
+
+    print("first row from one_loop: ", dists[0,:])
     return dists
 
   def compute_distances_no_loops(self, X):
@@ -111,7 +116,7 @@ class KNearestNeighbor(object):
     ysquared = np.sum(np.square(X), axis=1)[None].T
     xy = np.dot(X, self.X_train.T)
     dists = np.sqrt(xsquared - 2 * xy + ysquared)
-
+    print("first row from no_loop: ", dists[0,:])
     return dists
 
   def predict_labels(self, dists, k=1):
