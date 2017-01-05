@@ -236,8 +236,6 @@ print('No loop version took %f seconds' % no_loop_time)
 num_folds = 5
 k_choices = [1, 3, 5, 8, 10, 12, 15, 20, 50, 100]
 
-X_train_folds = []
-y_train_folds = []
 ################################################################################
 # TODO:                                                                        #
 # Split up the training data into folds. After splitting, X_train_folds and    #
@@ -245,7 +243,8 @@ y_train_folds = []
 # y_train_folds[i] is the label vector for the points in X_train_folds[i].     #
 # Hint: Look up the numpy array_split function.                                #
 ################################################################################
-pass
+X_train_folds = np.array_split(X_train, num_folds)
+y_train_folds = np.array_split(y_train, num_folds)
 ################################################################################
 #                                 END OF YOUR CODE                             #
 ################################################################################
