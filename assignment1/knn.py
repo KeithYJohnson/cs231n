@@ -265,6 +265,22 @@ k_to_accuracies = {}
 # values of k in the k_to_accuracies dictionary.                               #
 ################################################################################
 pass
+x_cv_test_fold = X_train_folds.pop()
+y_cv_test_fold = y_train_folds.pop()
+num_cv_test = len(y_cv_test_fold)
+accuracies = []
+for k in k_choices:
+    print('trying k as : ', k)
+    for i in range(num_folds): # Excluding the last fold
+        classifier = KNearestNeighbor()
+        classifier.train(np.concatenate(X_train_folds), np.concatenate(y_train_folds))
+        dists = classifier.compute_distances_no_loops(x_cv_test_fold)
+        y_cv_pred = classifier.predict_labels(dists, k)
+        num_correct = np.sum(y_cv_pred == y_cv_test_fold)
+        accuracy = float(num_correct) / num_cv_test
+        accuracies.append(accuracy)
+    k_to_accuracies[k] = accuracies
+    accuracies = []
 ################################################################################
 #                                 END OF YOUR CODE                             #
 ################################################################################
