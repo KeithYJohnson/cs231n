@@ -116,7 +116,6 @@ class KNearestNeighbor(object):
     ysquared = np.sum(np.square(X), axis=1)[None].T
     xy = np.dot(X, self.X_train.T)
     dists = np.sqrt(xsquared - 2 * xy + ysquared)
-    print("first row from no_loop: ", dists[0,:])
     return dists
 
   def predict_labels(self, dists, k=1):
