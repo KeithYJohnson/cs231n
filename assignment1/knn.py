@@ -268,17 +268,35 @@ pass
 x_cv_test_fold = X_train_folds.pop()
 y_cv_test_fold = y_train_folds.pop()
 num_cv_test = len(y_cv_test_fold)
+num_cv_test = len(X_train_folds[0])
 accuracies = []
 for k in k_choices:
     print('trying k as : ', k)
     for i in range(num_folds): # Excluding the last fold
+        x_cv_test_fold = X_train_folds[i]
+        y_cv_test_fold = y_train_folds[i]
+
+        mask = np.ones(len(X_train_folds))
+        mask[i] = 0
+
+        # Just a reminder, pdbs dont take kindly to
+        # evaluating the list().
+        x_cv_train_folds = list(compress(X_train_folds, mask))
+        y_cv_train_folds = list(compress(y_train_folds, mask))
+
+        #Set up a new CV classifier
         classifier = KNearestNeighbor()
         classifier.train(np.concatenate(X_train_folds), np.concatenate(y_train_folds))
+        classifier.train(np.concatenate(x_cv_train_folds), np.concatenate(y_cv_train_folds))
+
         dists = classifier.compute_distances_no_loops(x_cv_test_fold)
         y_cv_pred = classifier.predict_labels(dists, k)
+
+        # Handling accuracy calcs and storage.
         num_correct = np.sum(y_cv_pred == y_cv_test_fold)
         accuracy = float(num_correct) / num_cv_test
         accuracies.append(accuracy)
+
     k_to_accuracies[k] = accuracies
     accuracies = []
 ################################################################################
