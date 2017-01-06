@@ -1,5 +1,6 @@
 import numpy as np
 from random import shuffle
+from ipdb import set_trace as st
 
 def svm_loss_naive(W, X, y, reg):
   """
@@ -26,18 +27,29 @@ def svm_loss_naive(W, X, y, reg):
   num_train = X.shape[0]
   loss = 0.0
   for i in xrange(num_train):
-    scores = X[i].dot(W)
-    correct_class_score = scores[y[i]]
+    current_example = X[i]
+    scores = current_example.dot(W)
+    score_for_correct_class = scores[y[i]]
     for j in xrange(num_classes):
       if j == y[i]:
         continue
-      margin = scores[j] - correct_class_score + 1 # note delta = 1
+      margin = scores[j] - score_for_correct_class + 1 # note delta = 1
       if margin > 0:
+        # Because we know the margin is greater than 0 we
+        # Dont have to worry about max gates in gradient here and can
+        # Just use  the (w_j * x_i - w_yi * x_i + someconstant) equaltion
+        #
+        # del_Li / del_wj =  x_i
+        # del_Li / del_yi = -x_i
+
+        dW[:, y[i]] -= current_example
+        dW[:, j]    += current_example
         loss += margin
 
   # Right now the loss is a sum over all training examples, but we want it
   # to be an average instead so we divide by num_train.
   loss /= num_train
+  dW   /= num_train
 
   # Add regularization to the loss.
   loss += 0.5 * reg * np.sum(W * W)
@@ -45,7 +57,7 @@ def svm_loss_naive(W, X, y, reg):
   #############################################################################
   # TODO:                                                                     #
   # Compute the gradient of the loss function and store it dW.                #
-  # Rather that first computing the loss and then computing the derivative,   #
+  # Rather than first computing the loss and then computing the derivative,   #
   # it may be simpler to compute the derivative at the same time that the     #
   # loss is being computed. As a result you may need to modify some of the    #
   # code above to compute the gradient.                                       #
