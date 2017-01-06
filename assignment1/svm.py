@@ -1,19 +1,19 @@
-
+from ipdb import set_trace as st
 # coding: utf-8
 
 # # Multiclass Support Vector Machine exercise
-# 
+#
 # *Complete and hand in this completed worksheet (including its outputs and any supporting code outside of the worksheet) with your assignment submission. For more details see the [assignments page](http://vision.stanford.edu/teaching/cs231n/assignments.html) on the course website.*
-# 
+#
 # In this exercise you will:
-#     
+#
 # - implement a fully-vectorized **loss function** for the SVM
 # - implement the fully-vectorized expression for its **analytic gradient**
 # - **check your implementation** using numerical gradient
 # - use a validation set to **tune the learning rate and regularization** strength
 # - **optimize** the loss function with **SGD**
 # - **visualize** the final learned weights
-# 
+#
 
 # In[ ]:
 
@@ -26,15 +26,15 @@ import matplotlib.pyplot as plt
 
 # This is a bit of magic to make matplotlib figures appear inline in the
 # notebook rather than in a new window.
-get_ipython().magic('matplotlib inline')
+# get_ipython().magic('matplotlib inline')
 plt.rcParams['figure.figsize'] = (10.0, 8.0) # set default size of plots
 plt.rcParams['image.interpolation'] = 'nearest'
 plt.rcParams['image.cmap'] = 'gray'
 
 # Some more magic so that the notebook will reload external python modules;
 # see http://stackoverflow.com/questions/1907993/autoreload-of-modules-in-ipython
-get_ipython().magic('load_ext autoreload')
-get_ipython().magic('autoreload 2')
+# get_ipython().magic('load_ext autoreload')
+# get_ipython().magic('autoreload 2')
 
 
 # ## CIFAR-10 Data Loading and Preprocessing
@@ -56,20 +56,20 @@ print 'Test labels shape: ', y_test.shape
 
 # Visualize some examples from the dataset.
 # We show a few examples of training images from each class.
-classes = ['plane', 'car', 'bird', 'cat', 'deer', 'dog', 'frog', 'horse', 'ship', 'truck']
-num_classes = len(classes)
-samples_per_class = 7
-for y, cls in enumerate(classes):
-    idxs = np.flatnonzero(y_train == y)
-    idxs = np.random.choice(idxs, samples_per_class, replace=False)
-    for i, idx in enumerate(idxs):
-        plt_idx = i * num_classes + y + 1
-        plt.subplot(samples_per_class, num_classes, plt_idx)
-        plt.imshow(X_train[idx].astype('uint8'))
-        plt.axis('off')
-        if i == 0:
-            plt.title(cls)
-plt.show()
+# classes = ['plane', 'car', 'bird', 'cat', 'deer', 'dog', 'frog', 'horse', 'ship', 'truck']
+# num_classes = len(classes)
+# samples_per_class = 7
+# for y, cls in enumerate(classes):
+#     idxs = np.flatnonzero(y_train == y)
+#     idxs = np.random.choice(idxs, samples_per_class, replace=False)
+#     for i, idx in enumerate(idxs):
+#         plt_idx = i * num_classes + y + 1
+#         plt.subplot(samples_per_class, num_classes, plt_idx)
+#         plt.imshow(X_train[idx].astype('uint8'))
+#         plt.axis('off')
+#         if i == 0:
+#             plt.title(cls)
+# plt.show()
 
 
 # In[ ]:
@@ -136,8 +136,8 @@ print 'dev data shape: ', X_dev.shape
 mean_image = np.mean(X_train, axis=0)
 print mean_image[:10] # print a few of the elements
 plt.figure(figsize=(4,4))
-plt.imshow(mean_image.reshape((32,32,3)).astype('uint8')) # visualize the mean image
-plt.show()
+# plt.imshow(mean_image.reshape((32,32,3)).astype('uint8')) # visualize the mean image
+# plt.show()
 
 
 # In[ ]:
@@ -162,10 +162,12 @@ print X_train.shape, X_val.shape, X_test.shape, X_dev.shape
 
 
 # ## SVM Classifier
-# 
-# Your code for this section will all be written inside **cs231n/classifiers/linear_svm.py**. 
-# 
-# As you can see, we have prefilled the function `compute_loss_naive` which uses for loops to evaluate the multiclass SVM loss function. 
+#
+# Your code for this section will all be written inside **cs231n/classifiers/linear_svm.py**.
+#
+# As you can see, we have prefilled the function
+# `compute_loss_naive` which uses for loops to evaluate
+# the multiclass SVM loss function.
 
 # In[ ]:
 
@@ -174,15 +176,21 @@ from cs231n.classifiers.linear_svm import svm_loss_naive
 import time
 
 # generate a random SVM weight matrix of small numbers
-W = np.random.randn(3073, 10) * 0.0001 
+W = np.random.randn(3073, 10) * 0.0001
 
 loss, grad = svm_loss_naive(W, X_dev, y_dev, 0.00001)
 print 'loss: %f' % (loss, )
 
 
-# The `grad` returned from the function above is right now all zero. Derive and implement the gradient for the SVM cost function and implement it inline inside the function `svm_loss_naive`. You will find it helpful to interleave your new code inside the existing function.
-# 
-# To check that you have correctly implemented the gradient correctly, you can numerically estimate the gradient of the loss function and compare the numeric estimate to the gradient that you computed. We have provided code that does this for you:
+# The `grad` returned from the function above is right now all zero.
+# Derive and implement the gradient for the SVM cost function and
+# implement it inline inside the function `svm_loss_naive`.
+# You will find it helpful to interleave your new code inside the existing function.
+#
+# To check that you have correctly implemented the gradient correctly,
+# you can numerically estimate the gradient of the loss function and
+# compare the numeric estimate to the gradient that you computed.
+# We have provided code that does this for you:
 
 # In[ ]:
 
@@ -191,24 +199,30 @@ print 'loss: %f' % (loss, )
 
 # Compute the loss and its gradient at W.
 loss, grad = svm_loss_naive(W, X_dev, y_dev, 0.0)
+print('svm_loss_naive grad: ', grad)
 
 # Numerically compute the gradient along several randomly chosen dimensions, and
 # compare them with your analytically computed gradient. The numbers should match
 # almost exactly along all dimensions.
+print('checking gradient with grad_check_sparse')
 from cs231n.gradient_check import grad_check_sparse
 f = lambda w: svm_loss_naive(w, X_dev, y_dev, 0.0)[0]
 grad_numerical = grad_check_sparse(f, W, grad)
 
 # do the gradient check once again with regularization turned on
 # you didn't forget the regularization gradient did you?
+print('check regularization gradient')
 loss, grad = svm_loss_naive(W, X_dev, y_dev, 1e2)
 f = lambda w: svm_loss_naive(w, X_dev, y_dev, 1e2)[0]
 grad_numerical = grad_check_sparse(f, W, grad)
 
 
 # ### Inline Question 1:
-# It is possible that once in a while a dimension in the gradcheck will not match exactly. What could such a discrepancy be caused by? Is it a reason for concern? What is a simple example in one dimension where a gradient check could fail? *Hint: the SVM loss function is not strictly speaking differentiable*
-# 
+#  It is possible that once in a while a dimension in the gradcheck will not match exactly.
+#  What could such a discrepancy be caused by? Is it a reason for concern?
+#  What is a simple example in one dimension where a gradient check could fail?
+# *Hint: the SVM loss function is not strictly speaking differentiable*
+#
 # **Your Answer:** *fill this in.*
 # Kinks in the loss function.  If the SVM is clamped at
 # zero and you add a h to the numerical grad evaluation
@@ -260,7 +274,7 @@ print 'difference: %f' % difference
 
 
 # ### Stochastic Gradient Descent
-# 
+#
 # We now have vectorized and efficient expressions for the loss, the gradient and our gradient matches the numerical gradient. We are therefore ready to do SGD to minimize the loss.
 
 # In[ ]:
@@ -331,13 +345,13 @@ pass
 ################################################################################
 #                              END OF YOUR CODE                                #
 ################################################################################
-    
+
 # Print out results.
 for lr, reg in sorted(results):
     train_accuracy, val_accuracy = results[(lr, reg)]
     print 'lr %e reg %e train accuracy: %f val accuracy: %f' % (
                 lr, reg, train_accuracy, val_accuracy)
-    
+
 print 'best validation accuracy achieved during cross-validation: %f' % best_val
 
 
@@ -388,7 +402,7 @@ w_min, w_max = np.min(w), np.max(w)
 classes = ['plane', 'car', 'bird', 'cat', 'deer', 'dog', 'frog', 'horse', 'ship', 'truck']
 for i in xrange(10):
   plt.subplot(2, 5, i + 1)
-    
+
   # Rescale the weights to be between 0 and 255
   wimg = 255.0 * (w[:, :, :, i].squeeze() - w_min) / (w_max - w_min)
   plt.imshow(wimg.astype('uint8'))
@@ -398,5 +412,5 @@ for i in xrange(10):
 
 # ### Inline question 2:
 # Describe what your visualized SVM weights look like, and offer a brief explanation for why they look they way that they do.
-# 
+#
 # **Your answer:** *fill this in*
