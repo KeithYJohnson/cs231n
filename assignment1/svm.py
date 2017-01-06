@@ -210,6 +210,11 @@ grad_numerical = grad_check_sparse(f, W, grad)
 # It is possible that once in a while a dimension in the gradcheck will not match exactly. What could such a discrepancy be caused by? Is it a reason for concern? What is a simple example in one dimension where a gradient check could fail? *Hint: the SVM loss function is not strictly speaking differentiable*
 # 
 # **Your Answer:** *fill this in.*
+# Kinks in the loss function.  If the SVM is clamped at
+# zero and you add a h to the numerical grad evaluation
+# that returns something non-zero, then youre gonna
+# have a bad time
+# A much more thorough answer can be found here: http://cs231n.github.io/neural-networks-3/#gradcheck
 
 # In[ ]:
 
