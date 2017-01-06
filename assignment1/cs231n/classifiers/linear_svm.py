@@ -34,6 +34,15 @@ def svm_loss_naive(W, X, y, reg):
         continue
       margin = scores[j] - score_for_correct_class + 1 # note delta = 1
       if margin > 0:
+        # Because we know the margin is greater than 0 we
+        # Dont have to worry about max gates in gradient here and can
+        # Just use  the (w_j * x_i - w_yi * x_i + someconstant) equaltion
+        #
+        # del_Li / del_wj =  x_i
+        # del_Li / del_yi = -x_i
+
+        dW[:, y[i]] -= current_example
+        dW[:, j]    += current_example
         loss += margin
 
   # Right now the loss is a sum over all training examples, but we want it
