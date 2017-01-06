@@ -1,5 +1,6 @@
 import numpy as np
 from random import shuffle
+from ipdb import set_trace as st
 
 def svm_loss_naive(W, X, y, reg):
   """
@@ -56,7 +57,7 @@ def svm_loss_naive(W, X, y, reg):
   #############################################################################
   # TODO:                                                                     #
   # Compute the gradient of the loss function and store it dW.                #
-  # Rather that first computing the loss and then computing the derivative,   #
+  # Rather than first computing the loss and then computing the derivative,   #
   # it may be simpler to compute the derivative at the same time that the     #
   # loss is being computed. As a result you may need to modify some of the    #
   # code above to compute the gradient.                                       #
