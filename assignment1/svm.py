@@ -186,8 +186,9 @@ import time
 # generate a random SVM weight matrix of small numbers
 W = np.random.randn(3073, 10) * 0.0001
 
-loss, grad = svm_loss_naive(W, X_dev, y_dev, 0.00001)
-print 'loss: %f' % (loss, )
+if args.tl:
+    loss, grad = svm_loss_naive(W, X_dev, y_dev, 0.00001)
+    print 'loss: %f' % (loss, )
 
 
 # The `grad` returned from the function above is right now all zero.
