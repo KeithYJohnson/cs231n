@@ -207,8 +207,9 @@ if args.tl:
 # and gradient check it with the function we provided for you
 
 # Compute the loss and its gradient at W.
-loss, grad = svm_loss_naive(W, X_dev, y_dev, 0.0)
-print('svm_loss_naive grad: ', grad)
+if args.tg:
+    loss, grad = svm_loss_naive(W, X_dev, y_dev, 0.0)
+    print('svm_loss_naive grad: ', grad)
 
 # Numerically compute the gradient along several randomly chosen dimensions, and
 # compare them with your analytically computed gradient. The numbers should match
