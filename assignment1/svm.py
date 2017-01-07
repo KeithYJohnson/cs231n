@@ -1,4 +1,12 @@
 from ipdb import set_trace as st
+from argparse import ArgumentParser
+
+p = ArgumentParser()
+_ = p.add_argument('--cg', '--checkgrad', action='store_true')
+_ = p.add_argument('--tl', '--testloss',   action='store_true')
+_ = p.add_argument('--tg', '--testgrad',   action='store_true')
+
+args = p.parse_args()
 # coding: utf-8
 
 # # Multiclass Support Vector Machine exercise
