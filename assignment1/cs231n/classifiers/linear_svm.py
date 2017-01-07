@@ -29,11 +29,21 @@ def svm_loss_naive(W, X, y, reg):
   for i in xrange(num_train):
     current_example = X[i]
     scores = current_example.dot(W)
+
+    #Print first row score
+    if i == 0:
+        print('svm_loss_naive scores.shape: ', scores.shape)
+        print('scores for first X[i]: ', scores)
+        print('score_for_correct_class = scores[y[i]]', scores[y[i]])
+
     score_for_correct_class = scores[y[i]]
+
     for j in xrange(num_classes):
       if j == y[i]:
         continue
       margin = scores[j] - score_for_correct_class + 1 # note delta = 1
+      if i == 0:
+          print('margin for first examples j: ', j, 'margin: ', margin)
       if margin > 0:
         # Because we know the margin is greater than 0 we
         # Dont have to worry about max gates in gradient here and can
