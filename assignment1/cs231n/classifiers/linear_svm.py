@@ -103,6 +103,10 @@ def svm_loss_vectorized(W, X, y, reg):
   #  zero, plus the constant of 1, resulting in 1 getting added to the
   #  error for each example, we set these to zero on the next line.
   margins[np.arange(num_train), y] = 0
+
+  loss  = np.sum(margins)
+  loss /= num_train
+  loss += 0.5 * reg * np.sum(W * W)
   #############################################################################
   #                             END OF YOUR CODE                              #
   #############################################################################
