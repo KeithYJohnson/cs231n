@@ -2,6 +2,8 @@ import numpy as np
 from random import shuffle
 from ipdb import set_trace as st
 
+# For debugging purposes only.
+naive_margins = np.zeros((500,10))
 def svm_loss_naive(W, X, y, reg):
   """
   Structured SVM loss function, naive implementation (with loops).
@@ -41,9 +43,9 @@ def svm_loss_naive(W, X, y, reg):
     for j in xrange(num_classes):
       if j == y[i]:
         continue
+        naive_margins[i,j] = 0
       margin = scores[j] - score_for_correct_class + 1 # note delta = 1
-      if i == 0:
-          print('margin for first examples j: ', j, 'margin: ', margin)
+      naive_margins[i,j] = margin
       if margin > 0:
         # Because we know the margin is greater than 0 we
         # Dont have to worry about max gates in gradient here and can
@@ -81,7 +83,6 @@ def svm_loss_naive(W, X, y, reg):
 def svm_loss_vectorized(W, X, y, reg):
   """
   Structured SVM loss function, vectorized implementation.
-
   Inputs and outputs are the same as svm_loss_naive.
   """
   loss = 0.0
