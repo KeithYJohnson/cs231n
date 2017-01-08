@@ -90,6 +90,13 @@ def svm_loss_vectorized(W, X, y, reg):
 
   scores = X.dot(W)
   scores_for_correct_classes = scores[np.arange(num_train), y].reshape(num_train,1)
+
+  print(
+    'scores_for_correct_classes[0]: ',
+     scores_for_correct_classes[0],
+     "this should match the earlier print from svm_loss_naive 'score_for_correct_class = scores[y[i]]'"
+  )
+
   #############################################################################
   #                             END OF YOUR CODE                              #
   #############################################################################
