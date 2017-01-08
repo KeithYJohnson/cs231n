@@ -97,6 +97,12 @@ def svm_loss_vectorized(W, X, y, reg):
      "this should match the earlier print from svm_loss_naive 'score_for_correct_class = scores[y[i]]'"
   )
 
+  margins = np.maximum(0, scores - scores_for_correct_classes + 1)
+  #  Because ^^ didnt take into account that we dont want paradoxically
+  #  take the diff of the correct class with itself, which is always
+  #  zero, plus the constant of 1, resulting in 1 getting added to the
+  #  error for each example, we set these to zero on the next line.
+  margins[np.arange(num_train), y] = 0
   #############################################################################
   #                             END OF YOUR CODE                              #
   #############################################################################
