@@ -86,8 +86,10 @@ def svm_loss_vectorized(W, X, y, reg):
   """
   loss = 0.0
   dW = np.zeros(W.shape) # initialize the gradient as zero
+  num_train = X.shape[0]
 
   scores = X.dot(W)
+  scores_for_correct_classes = scores[np.arange(num_train), y].reshape(num_train,1)
   #############################################################################
   #                             END OF YOUR CODE                              #
   #############################################################################
