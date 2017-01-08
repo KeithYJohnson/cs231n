@@ -257,8 +257,7 @@ toc = time.time()
 print 'Vectorized loss: %e computed in %fs' % (loss_vectorized, toc - tic)
 
 # The losses should match but your vectorized implementation should be much faster.
-print 'difference: %f' % (loss_naive - loss_vectorized)
-
+print('difference if first diff between naive and vectorized losses: %f' % (loss_naive - loss_vectorized))
 
 # In[ ]:
 
@@ -281,7 +280,7 @@ print 'Vectorized loss and gradient: computed in %fs' % (toc - tic)
 # by the two implementations. The gradient on the other hand is a matrix, so
 # we use the Frobenius norm to compare them.
 difference = np.linalg.norm(grad_naive - grad_vectorized, ord='fro')
-print 'difference: %f' % difference
+print 'difference between naive and vectorized grads: %f' % difference
 
 
 # ### Stochastic Gradient Descent
