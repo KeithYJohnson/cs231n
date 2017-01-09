@@ -84,7 +84,7 @@ def svm_loss_vectorized(W, X, y, reg):
   #  take the diff of the correct class with itself, which is always
   #  zero, plus the constant of 1, resulting in 1 getting added to the
   #  error for each example, we set these to zero on the next line.
-  margins[np.arange(num_train), y] = 0
+  scores[np.arange(num_train),y]  = 0
 
   loss  = np.sum(margins)
   loss /= num_train
