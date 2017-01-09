@@ -2,9 +2,10 @@ import numpy as np
 from random import shuffle
 from ipdb import set_trace as st
 
-# For debugging purposes only.
-naive_margins = np.zeros((500,10))
-def svm_loss_naive(W, X, y, reg):
+# For debugging purposes only.l
+naive_margins = np.zeros((500, 10))
+first_row_dw = np.zeros((3073, 10))
+def svm_loss_naive(W, X, y, reg, first_row_dw=first_row_dw):
   """
   Structured SVM loss function, naive implementation (with loops).
 
@@ -57,6 +58,8 @@ def svm_loss_naive(W, X, y, reg):
         dW[:, y[i]] -= current_example
         dW[:, j]    += current_example
         loss += margin
+    if i == 0:
+        first_row_dw += dW
 
   # Right now the loss is a sum over all training examples, but we want it
   # to be an average instead so we divide by num_train.
