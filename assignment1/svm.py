@@ -2,9 +2,9 @@ from ipdb import set_trace as st
 from argparse import ArgumentParser
 
 p = ArgumentParser()
-_ = p.add_argument('--cg', '--checkgrad', action='store_true')
-_ = p.add_argument('--tl', '--testloss',   action='store_true')
-_ = p.add_argument('--tg', '--testgrad',   action='store_true')
+p.add_argument('--cg', '--checkgrad', action='store_true')
+p.add_argument('--tl', '--testloss',   action='store_true')
+p.add_argument('--tg', '--testgrad',   action='store_true')
 
 args = p.parse_args()
 # coding: utf-8
@@ -248,13 +248,14 @@ if args.cg:
 tic = time.time()
 loss_naive, grad_naive = svm_loss_naive(W, X_dev, y_dev, 0.00001)
 toc = time.time()
-print 'Naive loss: %e computed in %fs' % (loss_naive, toc - tic)
+print('Naive loss: %e computed in %fs' % (loss_naive, toc - tic))
 
 from cs231n.classifiers.linear_svm import svm_loss_vectorized
 tic = time.time()
+print('running svm_loss_vectorized')
 loss_vectorized, _ = svm_loss_vectorized(W, X_dev, y_dev, 0.00001)
 toc = time.time()
-print 'Vectorized loss: %e computed in %fs' % (loss_vectorized, toc - tic)
+print('Vectorized loss: %e computed in %fs' % (loss_vectorized, toc - tic))
 
 # The losses should match but your vectorized implementation should be much faster.
 print('difference if first diff between naive and vectorized losses: %f' % (loss_naive - loss_vectorized))
@@ -269,18 +270,18 @@ print('difference if first diff between naive and vectorized losses: %f' % (loss
 tic = time.time()
 _, grad_naive = svm_loss_naive(W, X_dev, y_dev, 0.00001)
 toc = time.time()
-print 'Naive loss and gradient: computed in %fs' % (toc - tic)
+print('Naive loss and gradient: computed in %fs' % (toc - tic))
 
 tic = time.time()
 _, grad_vectorized = svm_loss_vectorized(W, X_dev, y_dev, 0.00001)
 toc = time.time()
-print 'Vectorized loss and gradient: computed in %fs' % (toc - tic)
+print('Vectorized loss and gradient: computed in %fs' % (toc - tic))
 
 # The loss is a single number, so it is easy to compare the values computed
 # by the two implementations. The gradient on the other hand is a matrix, so
 # we use the Frobenius norm to compare them.
 difference = np.linalg.norm(grad_naive - grad_vectorized, ord='fro')
-print 'difference between naive and vectorized grads: %f' % difference
+print('difference between naive and vectorized grads: %f'.upper() % difference)
 
 
 # ### Stochastic Gradient Descent
