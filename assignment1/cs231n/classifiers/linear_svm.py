@@ -90,4 +90,29 @@ def svm_loss_vectorized(W, X, y, reg):
   loss /= num_train
   loss += 0.5 * reg * np.sum(W * W)
 
+  row = X[0]
+  row_as_column = np.row_stack(row)
+  cc = y[0] # class for row aka X[0]
+  m = margins[0] #margins for the row
+  oh = np.column_stack(np.where(m > 0, 1, 0)) #oh = one hot
+
+  #  The derivative tells us the we subtract a given row
+  #  from its class' weight, for each iteration of the SVM summation
+  #  which happens (num_classes - 1) times.
+  oh[:, cc] *= -1 * (num_classes -1) # TODO I noticed some numerical instability issues after writing this line.  The below for loop rarely returns false when comparing the correct class column in dW between the naive and vectorized fns.
+
+  #  This will also handle the part of the derivative where
+  #  we add a given row to the weights of the
+  #  classes of which it is not a part
+  rdw = row_as_column * oh
+
+  print('correct class index: ', cc)
+  for i in range(W.shape[1]):
+      print(i, 'th np.allclose', np.allclose(rdw[:,i], first_row_dw[:,i]))
+
+  vectorized_correct_class_row =  rdw[:,cc]
+  naive_correct_class_row = first_row_dw[:,cc]
+  print('vectorized: ', vectorized_correct_class_row)
+  print('from naive: ', naive_correct_class_row)
+
   return loss, dW
