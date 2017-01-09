@@ -2,9 +2,10 @@ import numpy as np
 from random import shuffle
 from ipdb import set_trace as st
 
-# For debugging purposes only.
-naive_margins = np.zeros((500,10))
-def svm_loss_naive(W, X, y, reg):
+# For debugging purposes only.l
+naive_margins = np.zeros((500, 10))
+first_row_dw = np.zeros((3073, 10))
+def svm_loss_naive(W, X, y, reg, first_row_dw=first_row_dw):
   """
   Structured SVM loss function, naive implementation (with loops).
 
@@ -31,13 +32,7 @@ def svm_loss_naive(W, X, y, reg):
   for i in xrange(num_train):
     current_example = X[i]
     scores = current_example.dot(W)
-
     #Print first row score
-    if i == 0:
-        print('svm_loss_naive scores.shape: ', scores.shape)
-        print('scores for first X[i]: ', scores)
-        print('score_for_correct_class = scores[y[i]]', scores[y[i]])
-
     score_for_correct_class = scores[y[i]]
 
     for j in xrange(num_classes):
@@ -57,6 +52,8 @@ def svm_loss_naive(W, X, y, reg):
         dW[:, y[i]] -= current_example
         dW[:, j]    += current_example
         loss += margin
+    if i == 0:
+        first_row_dw += dW
 
   # Right now the loss is a sum over all training examples, but we want it
   # to be an average instead so we divide by num_train.
@@ -77,26 +74,45 @@ def svm_loss_vectorized(W, X, y, reg):
   """
   loss = 0.0
   dW = np.zeros(W.shape) # initialize the gradient as zero
-  num_train = X.shape[0]
+  num_train   = X.shape[0]
+  num_classes = W.shape[1]
 
   scores = X.dot(W)
   scores_for_correct_classes = scores[np.arange(num_train), y].reshape(num_train,1)
-
-  print(
-    'scores_for_correct_classes[0]: ',
-     scores_for_correct_classes[0],
-     "this should match the earlier print from svm_loss_naive 'score_for_correct_class = scores[y[i]]'"
-  )
-
   margins = np.maximum(0, scores - scores_for_correct_classes + 1)
   #  Because ^^ didnt take into account that we dont want paradoxically
   #  take the diff of the correct class with itself, which is always
   #  zero, plus the constant of 1, resulting in 1 getting added to the
   #  error for each example, we set these to zero on the next line.
-  margins[np.arange(num_train), y] = 0
+  scores[np.arange(num_train),y]  = 0
 
   loss  = np.sum(margins)
   loss /= num_train
   loss += 0.5 * reg * np.sum(W * W)
+
+  row = X[0]
+  row_as_column = np.row_stack(row)
+  cc = y[0] # class for row aka X[0]
+  m = margins[0] #margins for the row
+  oh = np.column_stack(np.where(m > 0, 1, 0)) #oh = one hot
+
+  #  The derivative tells us the we subtract a given row
+  #  from its class' weight, for each iteration of the SVM summation
+  #  which happens (num_classes - 1) times.
+  oh[:, cc] *= -1 * (num_classes -1) # TODO I noticed some numerical instability issues after writing this line.  The below for loop rarely returns false when comparing the correct class column in dW between the naive and vectorized fns.
+
+  #  This will also handle the part of the derivative where
+  #  we add a given row to the weights of the
+  #  classes of which it is not a part
+  rdw = row_as_column * oh
+
+  print('correct class index: ', cc)
+  for i in range(W.shape[1]):
+      print(i, 'th np.allclose', np.allclose(rdw[:,i], first_row_dw[:,i]))
+
+  vectorized_correct_class_row =  rdw[:,cc]
+  naive_correct_class_row = first_row_dw[:,cc]
+  print('vectorized: ', vectorized_correct_class_row)
+  print('from naive: ', naive_correct_class_row)
 
   return loss, dW
