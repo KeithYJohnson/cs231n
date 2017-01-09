@@ -32,13 +32,7 @@ def svm_loss_naive(W, X, y, reg, first_row_dw=first_row_dw):
   for i in xrange(num_train):
     current_example = X[i]
     scores = current_example.dot(W)
-
     #Print first row score
-    if i == 0:
-        print('svm_loss_naive scores.shape: ', scores.shape)
-        print('scores for first X[i]: ', scores)
-        print('score_for_correct_class = scores[y[i]]', scores[y[i]])
-
     score_for_correct_class = scores[y[i]]
 
     for j in xrange(num_classes):
