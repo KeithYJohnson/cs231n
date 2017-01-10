@@ -5,6 +5,7 @@ p = ArgumentParser()
 p.add_argument('--cg', '--checkgrad', action='store_true')
 p.add_argument('--tl', '--testloss',   action='store_true')
 p.add_argument('--tg', '--testgrad',   action='store_true')
+p.add_argument('--cl', '--compare-loss', action='store_true')
 
 args = p.parse_args()
 # coding: utf-8
@@ -245,20 +246,23 @@ if args.cg:
 
 # Next implement the function svm_loss_vectorized; for now only compute the loss;
 # we will implement the gradient in a moment.
-tic = time.time()
-loss_naive, grad_naive = svm_loss_naive(W, X_dev, y_dev, 0.00001)
-toc = time.time()
-print('Naive loss: %e computed in %fs' % (loss_naive, toc - tic))
-
 from cs231n.classifiers.linear_svm import svm_loss_vectorized
-tic = time.time()
-print('running svm_loss_vectorized')
-loss_vectorized, _ = svm_loss_vectorized(W, X_dev, y_dev, 0.00001)
-toc = time.time()
-print('Vectorized loss: %e computed in %fs' % (loss_vectorized, toc - tic))
+if args.cl:
+    tic = time.time()
+    loss_naive, grad_naive = svm_loss_naive(W, X_dev, y_dev, 0.00001)
+    toc = time.time()
+    print('Naive loss: %e computed in %fs' % (loss_naive, toc - tic))
+
+    tic = time.time()
+    print('running svm_loss_vectorized')
+    loss_vectorized, _ = svm_loss_vectorized(W, X_dev, y_dev, 0.00001)
+    toc = time.time()
+    print('Vectorized loss: %e computed in %fs' % (loss_vectorized, toc - tic))
 
 # The losses should match but your vectorized implementation should be much faster.
 print('difference if first diff between naive and vectorized losses: %f' % (loss_naive - loss_vectorized))
+    # The losses should match but your vectorized implementation should be much faster.
+    print('difference if first diff between naive and vectorized losses: %f' % (loss_naive - loss_vectorized))
 
 # In[ ]:
 
