@@ -1,0 +1,3 @@
+{
+  "linear_svm_test.py::test_simple_vectorized_loss": true
+}
