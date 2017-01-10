@@ -289,7 +289,9 @@ if args.cgr:
 
 # ### Stochastic Gradient Descent
 #
-# We now have vectorized and efficient expressions for the loss, the gradient and our gradient matches the numerical gradient. We are therefore ready to do SGD to minimize the loss.
+# We now have vectorized and efficient expressions for the loss,
+# the gradient and our gradient matches the numerical gradient.
+# We are therefore ready to do SGD to minimize the loss.
 
 # In[ ]:
 
