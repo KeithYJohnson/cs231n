@@ -334,8 +334,8 @@ if args.tsvm:
 # learning rate). You should experiment with different ranges for the learning
 # rates and regularization strengths; if you are careful you should be able to
 # get a classification accuracy of about 0.4 on the validation set.
-learning_rates = [1e-7, 5e-5]
-regularization_strengths = [5e4, 1e5]
+learning_rates = [1e-12, 1.5e-12, 1e-11, 1.5e-11, 1e-10, 1.5e-10, 1e-9, 1.5e-9, 1e-8, 1.5e-8, 1e-7, 1.5e-7, 1e-6]
+regularization_strengths = [1e-9, 1.5e-9, 1e-8,1.5e-8, 1e-7, 1e-6, 1e-5, 1e-4, 1e-3, 1e-2, .1, .5, 1]
 
 # results is dictionary mapping tuples of the form
 # (learning_rate, regularization_strength) to tuples of the form
