@@ -6,6 +6,7 @@ p.add_argument('--cg', '--checkgrad', action='store_true')
 p.add_argument('--tl', '--testloss',   action='store_true')
 p.add_argument('--tg', '--testgrad',   action='store_true')
 p.add_argument('--cl', '--compare-loss', action='store_true')
+p.add_argument('--cgr', '--compare-gradients', action='store_true')
 
 args = p.parse_args()
 # coding: utf-8
@@ -269,25 +270,28 @@ if args.cl:
 
 # The naive implementation and the vectorized implementation should match, but
 # the vectorized version should still be much faster.
-tic = time.time()
-_, grad_naive = svm_loss_naive(W, X_dev, y_dev, 0.00001)
-toc = time.time()
-print('Naive loss and gradient: computed in %fs' % (toc - tic))
+if args.cgr:
+    tic = time.time()
+    _, grad_naive = svm_loss_naive(W, X_dev, y_dev, 0.00001)
+    toc = time.time()
+    print('Naive loss and gradient: computed in %fs' % (toc - tic))
 
-tic = time.time()
-_, grad_vectorized = svm_loss_vectorized(W, X_dev, y_dev, 0.00001)
-toc = time.time()
-print('Vectorized loss and gradient: computed in %fs' % (toc - tic))
+    tic = time.time()
+    _, grad_vectorized = svm_loss_vectorized(W, X_dev, y_dev, 0.00001)
+    toc = time.time()
+    print('Vectorized loss and gradient: computed in %fs' % (toc - tic))
 
-# The loss is a single number, so it is easy to compare the values computed
-# by the two implementations. The gradient on the other hand is a matrix, so
-# we use the Frobenius norm to compare them.
-difference = np.linalg.norm(grad_naive - grad_vectorized, ord='fro')
-print('difference between naive and vectorized grads: %f' % difference )
+    # The loss is a single number, so it is easy to compare the values computed
+    # by the two implementations. The gradient on the other hand is a matrix, so
+    # we use the Frobenius norm to compare them.
+    difference = np.linalg.norm(grad_naive - grad_vectorized, ord='fro')
+    print('difference between naive and vectorized grads: %f' % difference )
 
 # ### Stochastic Gradient Descent
 #
-# We now have vectorized and efficient expressions for the loss, the gradient and our gradient matches the numerical gradient. We are therefore ready to do SGD to minimize the loss.
+# We now have vectorized and efficient expressions for the loss,
+# the gradient and our gradient matches the numerical gradient.
+# We are therefore ready to do SGD to minimize the loss.
 
 # In[ ]:
 
