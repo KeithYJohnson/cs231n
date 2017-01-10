@@ -4,8 +4,7 @@ from ipdb import set_trace as st
 
 # For debugging purposes only.l
 naive_margins = np.zeros((500, 10))
-first_row_dw = np.zeros((3073, 10))
-def svm_loss_naive(W, X, y, reg, first_row_dw=first_row_dw):
+def svm_loss_naive(W, X, y, reg):
   """
   Structured SVM loss function, naive implementation (with loops).
 
