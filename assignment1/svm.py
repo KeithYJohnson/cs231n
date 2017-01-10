@@ -7,6 +7,7 @@ p.add_argument('--tl', '--testloss',   action='store_true')
 p.add_argument('--tg', '--testgrad',   action='store_true')
 p.add_argument('--cl', '--compare-loss', action='store_true')
 p.add_argument('--cgr', '--compare-gradients', action='store_true')
+p.add_argument('--tsvm', '--train-svm', action='store_true')
 
 args = p.parse_args()
 # coding: utf-8
@@ -298,32 +299,33 @@ if args.cgr:
 # In the file linear_classifier.py, implement SGD in the function
 # LinearClassifier.train() and then run it with the code below.
 from cs231n.classifiers import LinearSVM
-svm = LinearSVM()
-tic = time.time()
-loss_hist = svm.train(X_train, y_train, learning_rate=1e-7, reg=5e4,
-                      num_iters=1500, verbose=True)
-toc = time.time()
-print 'That took %fs' % (toc - tic)
+if args.tsvm:
+    svm = LinearSVM()
+    tic = time.time()
+    loss_hist = svm.train(X_train, y_train, learning_rate=1e-7, reg=5e4,
+                          num_iters=1500, verbose=True)
+    toc = time.time()
+    print 'That took %fs' % (toc - tic)
 
 
-# In[ ]:
+    # In[ ]:
 
-# A useful debugging strategy is to plot the loss as a function of
-# iteration number:
-plt.plot(loss_hist)
-plt.xlabel('Iteration number')
-plt.ylabel('Loss value')
-plt.show()
+    # A useful debugging strategy is to plot the loss as a function of
+    # iteration number:
+    plt.plot(loss_hist)
+    plt.xlabel('Iteration number')
+    plt.ylabel('Loss value')
+    # plt.show()
 
 
-# In[ ]:
+    # In[ ]:
 
-# Write the LinearSVM.predict function and evaluate the performance on both the
-# training and validation set
-y_train_pred = svm.predict(X_train)
-print 'training accuracy: %f' % (np.mean(y_train == y_train_pred), )
-y_val_pred = svm.predict(X_val)
-print 'validation accuracy: %f' % (np.mean(y_val == y_val_pred), )
+    # Write the LinearSVM.predict function and evaluate the performance on both the
+    # training and validation set
+    y_train_pred = svm.predict(X_train)
+    print 'training accuracy: %f' % (np.mean(y_train == y_train_pred), )
+    y_val_pred = svm.predict(X_val)
+    print 'validation accuracy: %f' % (np.mean(y_val == y_val_pred), )
 
 
 # In[ ]:
