@@ -7,6 +7,7 @@ p.add_argument('--tl', '--testloss',   action='store_true')
 p.add_argument('--tg', '--testgrad',   action='store_true')
 p.add_argument('--cl', '--compare-loss', action='store_true')
 p.add_argument('--cgr', '--compare-gradients', action='store_true')
+p.add_argument('--tsvm', '--train-svm', action='store_true')
 
 args = p.parse_args()
 # coding: utf-8
@@ -298,32 +299,33 @@ if args.cgr:
 # In the file linear_classifier.py, implement SGD in the function
 # LinearClassifier.train() and then run it with the code below.
 from cs231n.classifiers import LinearSVM
-svm = LinearSVM()
-tic = time.time()
-loss_hist = svm.train(X_train, y_train, learning_rate=1e-7, reg=5e4,
-                      num_iters=1500, verbose=True)
-toc = time.time()
-print 'That took %fs' % (toc - tic)
+if args.tsvm:
+    svm = LinearSVM()
+    tic = time.time()
+    loss_hist = svm.train(X_train, y_train, learning_rate=1e-7, reg=5e4,
+                          num_iters=1500, verbose=True)
+    toc = time.time()
+    print 'That took %fs' % (toc - tic)
 
 
-# In[ ]:
+    # In[ ]:
 
-# A useful debugging strategy is to plot the loss as a function of
-# iteration number:
-plt.plot(loss_hist)
-plt.xlabel('Iteration number')
-plt.ylabel('Loss value')
-plt.show()
+    # A useful debugging strategy is to plot the loss as a function of
+    # iteration number:
+    plt.plot(loss_hist)
+    plt.xlabel('Iteration number')
+    plt.ylabel('Loss value')
+    # plt.show()
 
 
-# In[ ]:
+    # In[ ]:
 
-# Write the LinearSVM.predict function and evaluate the performance on both the
-# training and validation set
-y_train_pred = svm.predict(X_train)
-print 'training accuracy: %f' % (np.mean(y_train == y_train_pred), )
-y_val_pred = svm.predict(X_val)
-print 'validation accuracy: %f' % (np.mean(y_val == y_val_pred), )
+    # Write the LinearSVM.predict function and evaluate the performance on both the
+    # training and validation set
+    y_train_pred = svm.predict(X_train)
+    print 'training accuracy: %f' % (np.mean(y_train == y_train_pred), )
+    y_val_pred = svm.predict(X_val)
+    print 'validation accuracy: %f' % (np.mean(y_val == y_val_pred), )
 
 
 # In[ ]:
@@ -332,8 +334,8 @@ print 'validation accuracy: %f' % (np.mean(y_val == y_val_pred), )
 # learning rate). You should experiment with different ranges for the learning
 # rates and regularization strengths; if you are careful you should be able to
 # get a classification accuracy of about 0.4 on the validation set.
-learning_rates = [1e-7, 5e-5]
-regularization_strengths = [5e4, 1e5]
+learning_rates = [1e-12, 1.5e-12, 1e-11, 1.5e-11, 1e-10, 1.5e-10, 1e-9, 1.5e-9, 1e-8, 1.5e-8, 1e-7, 1.5e-7, 1e-6]
+regularization_strengths = [1e-9, 1.5e-9, 1e-8,1.5e-8, 1e-7, 1e-6, 1e-5, 1e-4, 1e-3, 1e-2, .1, .5, 1]
 
 # results is dictionary mapping tuples of the form
 # (learning_rate, regularization_strength) to tuples of the form
@@ -342,25 +344,36 @@ regularization_strengths = [5e4, 1e5]
 results = {}
 best_val = -1   # The highest validation accuracy that we have seen so far.
 best_svm = None # The LinearSVM object that achieved the highest validation rate.
+best_tuning = ()
 
-################################################################################
-# TODO:                                                                        #
-# Write code that chooses the best hyperparameters by tuning on the validation #
-# set. For each combination of hyperparameters, train a linear SVM on the      #
-# training set, compute its accuracy on the training and validation sets, and  #
-# store these numbers in the results dictionary. In addition, store the best   #
-# validation accuracy in best_val and the LinearSVM object that achieves this  #
-# accuracy in best_svm.                                                        #
-#                                                                              #
-# Hint: You should use a small value for num_iters as you develop your         #
-# validation code so that the SVMs don't take much time to train; once you are #
-# confident that your validation code works, you should rerun the validation   #
-# code with a larger value for num_iters.                                      #
-################################################################################
-pass
-################################################################################
-#                              END OF YOUR CODE                                #
-################################################################################
+for learning_rate in learning_rates:
+    for reg_strength in regularization_strengths:
+        tuning = (learning_rate, reg_strength)
+        print('learning_rate, reg_strength: ', tuning)
+        svm = LinearSVM()
+        loss_hist = svm.train(
+            X_train,
+            y_train,
+            learning_rate=learning_rate,
+            reg=reg_strength,
+            num_iters=1500,
+            verbose=True
+        )
+
+        y_train_pred = svm.predict(X_train)
+        y_train_prediction_accuracy = np.mean(y_train == y_train_pred)
+        print('cv training accuracy: %f' % (y_train_prediction_accuracy, ))
+
+        y_val_pred = svm.predict(X_val)
+        y_val_prediction_accuracy = np.mean(y_val == y_val_pred)
+        print('cv validation accuracy: %f' % (y_val_prediction_accuracy, ))
+        accuracy = (y_train_prediction_accuracy, y_val_prediction_accuracy)
+
+        results[tuning] = accuracy
+        if y_val_prediction_accuracy > best_val:
+            best_val = y_val_prediction_accuracy
+            best_svm = svm
+            best_tuning = tuning
 
 # Print out results.
 for lr, reg in sorted(results):
