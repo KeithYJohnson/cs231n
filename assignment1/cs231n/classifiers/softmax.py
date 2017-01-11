@@ -1,5 +1,6 @@
 import numpy as np
 from random import shuffle
+from ipdb import set_trace as st
 
 def softmax_loss_naive(W, X, y, reg):
   """
@@ -22,6 +23,33 @@ def softmax_loss_naive(W, X, y, reg):
   # Initialize the loss and gradient to zero.
   loss = 0.0
   dW = np.zeros_like(W)
+  scores = X.dot(W)
+  num_train = X.shape[0]
+
+  # for i in range(num_train):
+  #     row = scores[i, :]
+  #     row_class = y[i]
+  #     row_class_score = row[row_class]
+  #
+  #     num = np.exp(row_class_score)
+  #     denom = np.sum(np.exp(row))
+  #
+  #     probability_of_correct_class = num / denom
+  #     loss = -np.log(probability_of_correct_class)
+
+  num_classes = W.shape[0]
+  num_train = X.shape[1]
+
+  for i in xrange(num_train):
+    scores = X[i:].dot(W)
+    scores -= np.max(scores)
+    correct_class = y[i]
+    normalize_scores = np.exp(scores) / np.sum(np.exp(scores))
+    st()
+    loss += - np.log(normalize_scores[y[correct_class]])
+
+
+  loss /= num_train
 
   #############################################################################
   # TODO: Compute the softmax loss and its gradient using explicit loops.     #
@@ -59,4 +87,3 @@ def softmax_loss_vectorized(W, X, y, reg):
   #############################################################################
 
   return loss, dW
-
